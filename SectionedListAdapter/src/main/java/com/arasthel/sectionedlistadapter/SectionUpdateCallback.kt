@@ -20,7 +20,7 @@ class SectionUpdateCallback(section: Section): ListUpdateCallback {
     }
 
     override fun onChanged(position: Int, count: Int, payload: Any?) {
-        section.get()?.notifyItemsChanged(position, count)
+        section.get()?.notifyItemsChanged(position, count, payload)
     }
 
 }

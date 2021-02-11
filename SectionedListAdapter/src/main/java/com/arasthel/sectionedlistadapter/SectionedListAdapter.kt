@@ -178,12 +178,20 @@ class SectionedListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        internalBindViewHolder(holder, position, null)
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads: MutableList<Any>) {
+        internalBindViewHolder(holder, position, payloads)
+    }
+
+    private fun internalBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads: List<Any>?) {
         val (section, offset) = getSectionAndOffset(position) ?: return
         val offsetWithoutHeader = if (section.isHeaderVisible()) offset-1 else offset
         when {
             section.isHeader(offset) -> section.bindHeaderViewHolder(holder)
             section.isFooter(offset) -> section.bindFooterViewHolder(holder)
-            else -> section.bindItemViewHolder(offsetWithoutHeader, holder)
+            else -> section.bindItemViewHolder(offsetWithoutHeader, holder, payloads)
         }
     }
 

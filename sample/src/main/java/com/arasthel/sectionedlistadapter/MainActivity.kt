@@ -1,18 +1,19 @@
 package com.arasthel.sectionedlistadapter
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
-    private val adapter = com.arasthel.sectionedlistadapter.SectionedListAdapter()
+    private val adapter = SectionedListAdapter()
     private val sections = mutableListOf(TestSection().apply {
         hasHeader = true
         defaultItemLayoutId = R.layout.item_test
@@ -72,7 +73,6 @@ class MainActivity : AppCompatActivity() {
 }
 
 data class Item(val title: String)
-
 class TestSection: com.arasthel.sectionedlistadapter.Section() {
 
     private val items = mutableListOf<Item>()
@@ -115,7 +115,7 @@ class TestSection: com.arasthel.sectionedlistadapter.Section() {
         return TestViewHolder(createDefaultItemView(parent)!!)
     }
 
-    override fun bindItemViewHolder(position: Int, viewHolder: RecyclerView.ViewHolder) {
+    override fun bindItemViewHolder(position: Int, viewHolder: RecyclerView.ViewHolder, payloads: List<Any>?) {
         val item = items[position]
         viewHolder.itemView.findViewById<TextView>(R.id.titleView)?.apply {
             text = "Item #${position}"

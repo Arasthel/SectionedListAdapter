@@ -137,7 +137,7 @@ abstract class Section {
      * Must be implemented.
      * You should configure and recycle your [RecyclerView.ViewHolder] items here.
      */
-    abstract fun bindItemViewHolder(index: Int, viewHolder: RecyclerView.ViewHolder)
+    abstract fun bindItemViewHolder(index: Int, viewHolder: RecyclerView.ViewHolder, payloads: List<Any>?)
 
     /**
      * Should only be implemented if [hasHeader] is true and no [headerLayoutId] is provided.
@@ -253,11 +253,12 @@ abstract class Section {
 
     /**
      * Used to notify the parent [adapter] when items have changed. Positions will be offsetted.
+     * @param payload A partial payload to apply diffing to existing elements.
      */
-    fun notifyItemsChanged(start: Int, count: Int) {
+    fun notifyItemsChanged(start: Int, count: Int, payload: Any? = null) {
         if (!isVisible) return
         val startPosition = getSectionFirstPosition(true) ?: return
-        adapter?.notifyItemRangeChanged(startPosition + start, count)
+        adapter?.notifyItemRangeChanged(startPosition + start, count, payload)
     }
 
     /**
