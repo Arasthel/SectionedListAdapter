@@ -198,10 +198,11 @@ class SectionedListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun getItemViewType(position: Int): Int {
         val (section: Section, index: Int) = getSectionAndOffset(position) ?: return VIEW_TYPE_ITEM
         val startIndex = sectionViewTypeStarts[section.identifier] ?: return VIEW_TYPE_ITEM
+        val offsetWithoutHeader = if (section.isHeaderVisible()) index-1 else index
         return when {
             section.isHeader(index) -> startIndex + VIEW_TYPE_HEADER
             section.isFooter(index) -> startIndex + VIEW_TYPE_FOOTER
-            else -> startIndex + VIEW_TYPE_ITEM + section.getItemViewType(position)
+            else -> startIndex + VIEW_TYPE_ITEM + section.getItemViewType(offsetWithoutHeader)
         }
     }
 
@@ -254,7 +255,7 @@ class SectionedListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
      * Returns the [Section] and index inside that [Section] of an item.
      * @param position Position in this adapter, independent of sections.
      */
-    private fun getSectionAndOffset(position: Int): Pair<Section, Int>? {
+    fun getSectionAndOffset(position: Int): Pair<Section, Int>? {
         var total = 0
         for (section in _sections) {
             val itemCount = section.getTotalCount()
@@ -266,6 +267,24 @@ class SectionedListAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             total = maxIndex
         }
         return null
+    }
+
+    /**
+     * Returns if the item in [position] is a header item
+     * @param position Position in this adapter, independent of sections.
+     */
+    fun isHeader(position: Int): Boolean {
+        val (section, offset) = getSectionAndOffset(position) ?: return false
+        return section.isHeader(offset)
+    }
+
+    /**
+     * Returns if the item in [position] is a footer item
+     * @param position Position in this adapter, independent of sections.
+     */
+    fun isFooter(position: Int): Boolean {
+        val (section, offset) = getSectionAndOffset(position) ?: return false
+        return section.isFooter(offset)
     }
 
     /**
