@@ -271,6 +271,26 @@ abstract class Section {
     }
 
     /**
+     * Used to notify the parent [adapter] when the header needs to be reloaded.
+     * @param payload A partial payload to apply diffing to existing elements.
+     */
+    fun notifyHeaderChanged(payload: Any? = null) {
+        if (!isHeaderVisible()) return
+        val firstPosition = getSectionFirstPosition(false) ?: return
+        adapter?.notifyItemChanged(firstPosition, payload)
+    }
+
+    /**
+     * Used to notify the parent [adapter] when the footer needs to be reloaded.
+     * @param payload A partial payload to apply diffing to existing elements.
+     */
+    fun notifyFooterChanged(payload: Any? = null) {
+        if (!isFooterVisible()) return
+        val firstPosition = getSectionFirstPosition(false) ?: return
+        adapter?.notifyItemChanged(firstPosition + getTotalCount()-1, payload)
+    }
+
+    /**
      * @param position Position of the item inside this section.
      * @return *true* if the item at the provided [position] is a header item
      */
